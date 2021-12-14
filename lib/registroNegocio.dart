@@ -31,6 +31,7 @@ class _registroNegocioState extends State<registroNegocio> {
       direccion.text = "";
       telefono.text = "";
       correo.text = "";
+      celular.text = "";
     }
 
   CollectionReference negocio =FirebaseFirestore.instance.collection('negocios');
