@@ -1,20 +1,16 @@
 import 'package:buny_app/registroNegocio.dart';
+import 'package:buny_app/screens/lista_productos_screen.dart';
+import 'package:buny_app/screens/registro_producto_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-
-
-
-
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp().then((value) {
+  await Firebase.initializeApp().then((value) {
     runApp(const MyApp());
   });
-
 }
 
 class MyApp extends StatelessWidget {
@@ -47,11 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initState(){
     super.initState();
-
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         title: Text("INICIO"),
       ),
-
 
       drawer: menu(),
       body:
@@ -138,13 +129,20 @@ class menu extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(builder: (context)=>registroNegocio()));
                     },
                   ),
-
-
-
-
-
-
-
+                  ListTile(
+                    leading: Icon(Icons.post_add,size: 30, color: Colors.cyan[700]),
+                    title: Text("Agregar producto"),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>RegistroProductoScreen()));
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.list,size: 30, color: Colors.cyan[700]),
+                    title: Text("Mostrar productos"),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ListaProductosScreen()));
+                    },
+                  ),
                 ]
             )
           ],
