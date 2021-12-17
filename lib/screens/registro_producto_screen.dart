@@ -3,18 +3,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../model/producto.dart';
+import 'home_screen.dart';
 
 class RegistroProductoScreen extends StatelessWidget {
+  final String id;
+
+  RegistroProductoScreen(this.id, {Key? key}) : super(key: key);
 
   final nombreController = TextEditingController();
   final descripController = TextEditingController();
   final fotoController = TextEditingController();
   final precioController = TextEditingController();
 
-  //CollectionReference negocio = FirebaseFirestore.instance.collection('negocios')
-   //   .where('id', isEqualTo: '001').get() as CollectionReference<Object?>;
-
-  Future<void> registarProducto() async {
+  Future<void> registarProducto(context) async {
     Producto newProducto = Producto(nombreController.text, descripController.text, fotoController.text, precioController.text);
 
     var productoMap = {
@@ -24,9 +25,13 @@ class RegistroProductoScreen extends StatelessWidget {
       'foto' : newProducto.foto
     };
     FirebaseFirestore.instance
-        .collection("negocios").doc('001').update({
+        .collection("negocios").doc(id).update({
       'productos': FieldValue.arrayUnion([productoMap])
         });
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (_){
+      return HomeScreen(id);
+    }));
   }
 
   @override
@@ -34,7 +39,7 @@ class RegistroProductoScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan[700],
-        title: Text("Registrate"),
+        title: Text("Agregar producto"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -114,7 +119,7 @@ class RegistroProductoScreen extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-                onPressed: registarProducto,
+                onPressed: () => registarProducto(context),
                 child: Text('Registrar Producto'),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.cyan[700])

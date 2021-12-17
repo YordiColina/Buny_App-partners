@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'main.dart';
-class registroNegocio extends StatefulWidget {
-  const registroNegocio({Key? key}) : super(key: key);
+import '../main.dart';
+import 'menu_widget.dart';
+class RegistroNegocioScreen extends StatefulWidget {
+  const RegistroNegocioScreen({Key? key}) : super(key: key);
 
   @override
-  _registroNegocioState createState() => _registroNegocioState();
+  _RegistroNegocioScreenState createState() => _RegistroNegocioScreenState();
 }
 
-class _registroNegocioState extends State<registroNegocio> {
+class _RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
 
     final categoria = TextEditingController();
     final foto = TextEditingController();
@@ -22,6 +23,7 @@ class _registroNegocioState extends State<registroNegocio> {
     final celular = TextEditingController();
     final correo = TextEditingController();
     List pers = [];
+
     void limpiar() {
       foto.text = "";
       nombre.text = "";
@@ -41,20 +43,17 @@ class _registroNegocioState extends State<registroNegocio> {
         backgroundColor: Colors.cyan[50],
         appBar: AppBar(
           backgroundColor: Colors.cyan[700],
-          title: Text("Registrate"),
+          title: const Text("Registrate"),
           centerTitle: true,
         ),
-
-        drawer: menu(),
-
 
         body: ListView(
             children: [
               Container(
-                  padding: EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: TextField(
                     controller: foto,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                         fillColor: Colors.cyan[700],
                         filled: true,

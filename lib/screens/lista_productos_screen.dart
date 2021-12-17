@@ -4,17 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ListaProductosScreen extends StatefulWidget {
-  const ListaProductosScreen({Key? key}) : super(key: key);
+  final String id;
+  const ListaProductosScreen(this.id,{Key? key}) : super(key: key);
 
   @override
-  _ListaProductosScreenState createState() => _ListaProductosScreenState();
+  _ListaProductosScreenState createState() => _ListaProductosScreenState(id);
 }
 
 class _ListaProductosScreenState extends State<ListaProductosScreen> {
-  
+  _ListaProductosScreenState(this.id);
+
+  String id;
   Future<List<Producto>> getListaProductos() async {
     var listaJson = [];
-    final value = await FirebaseFirestore.instance.collection("negocios").doc('001').get();
+    final value = await FirebaseFirestore.instance.collection("negocios").doc(id).get();
     listaJson = value.data()!["productos"];
 
     List<Producto> listaProductos = [];
@@ -37,7 +40,7 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
     return Scaffold(
         appBar: AppBar(
         backgroundColor: Colors.cyan[700],
-        title: Text("Productos"),
+        title: const Text("Productos"),
     centerTitle: true,
     ),
     body: Container(
@@ -59,19 +62,6 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
                 return list[index];
               },
             );
-            /**return GridView(
-              padding: const EdgeInsets.all(5),
-              children: (snapshot.data!)
-                  .map((productInfo){
-                return ProductItem(productInfo.nombre, productInfo.descripcion, productInfo.precio, productInfo.foto);
-              }).toList(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.6
-              ),
-            );*/
           } else{
             return const Center(
               child: CircularProgressIndicator(
