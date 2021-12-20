@@ -1,7 +1,19 @@
+
+
+
+
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+
+
 import 'main.dart';
+import 'package:image_picker/image_picker.dart';
 class registroNegocio extends StatefulWidget {
   const registroNegocio({Key? key}) : super(key: key);
 
@@ -10,7 +22,8 @@ class registroNegocio extends StatefulWidget {
 }
 
 class _registroNegocioState extends State<registroNegocio> {
-
+ var aux;
+ var aux2;
     final categoria = TextEditingController();
     final foto = TextEditingController();
     final nombre = TextEditingController();
@@ -34,7 +47,171 @@ class _registroNegocioState extends State<registroNegocio> {
       celular.text = "";
     }
 
-  CollectionReference negocio =FirebaseFirestore.instance.collection('negocios');
+/////////////////////////////////////////////////////////////////
+  DocumentReference bunyAppRef = FirebaseFirestore.instance.collection('bunnyApp').doc();
+
+  String camara="";
+  String almacen="";
+  File? imagen ;
+  final picker=ImagePicker();
+  Future selimagen(op)async {
+    var pickedFile;
+    if (op == 1) {
+      pickedFile= await picker.pickImage(source: ImageSource.camera);
+      camara=pickedFile.toString() ;
+
+    } else {
+      pickedFile= await picker.pickImage(source: ImageSource.gallery);
+      almacen=pickedFile.toString();
+    }
+    setState(() {
+      if(pickedFile!=null){
+        imagen=File(pickedFile.path);
+
+      }else{
+        print('No seleccionaste ninguna Foto');
+
+      }
+    });
+  Navigator.of(context).pop();
+
+    Future<String> uploadFile(File image) async{
+
+      String fileName = image.path;
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('bunyApp/$fileName');
+      await storageReference.putFile(image);
+      aux2=await storageReference.getDownloadURL();
+      return await storageReference.getDownloadURL();
+
+
+    }
+
+
+    Future<void> saveImages(File? imagen, DocumentReference ref) async {
+
+        String imageURL = await uploadFile(imagen!);
+        ref.update({"images": FieldValue.arrayUnion([imageURL])});
+
+
+    }
+    await saveImages(imagen,bunyAppRef);
+
+   /* var storage = FirebaseStorage.instance;
+    var storageRef = storage.ref();
+    aux =imagen!.path;
+    var spaceRef = await storageRef.child('$aux').getDownloadURL().toString() ;
+   aux2=spaceRef;*/
+
+
+
+
+
+
+
+//
+
+
+     //   var httpsReference = storage.refFromURL('https://firebasestorage.googleapis.com/v0/b/equipo1proyecto-98cd8.appspot.com/o/bunyApp%2Fdata%2Fuser%2F0%2Fcom.bunyProject.buny_app%2Fcache%2F$aux');
+    //aux2= storage.refFromURL('https://firebasestorage.googleapis.com/v0/b/equipo1proyecto-98cd8.appspot.com/o/bunyApp%2Fdata%2Fuser%2F0%2Fcom.bunyProject.buny_app%2Fcache%2F$aux');
+  }
+
+
+
+// Image Picker
+
+
+    //////////////////////////////////////////////////////////////////
+    opciones(contex) {
+      showDialog(context: context,
+          builder: (BuildContext contex) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(0),
+              content: SingleChildScrollView(
+                child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          selimagen(1);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              border: Border(bottom: BorderSide(
+                                  width: 1, color: Colors.grey))
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(child: Text(
+                                'Tomar una Foto', style: TextStyle(fontSize: 16)
+                                ,
+
+                              ),
+
+                              ),
+                              Icon(Icons.camera_alt, color: Colors.blue)
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          selimagen(2);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+
+                          child: Row(
+                            children: [
+                              Expanded(child: Text('Seleccionar una Foto',
+                                style: TextStyle(fontSize: 16)
+                                ,
+
+                              ),
+
+                              ),
+                              Icon(Icons.image, color: Colors.blue)
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(color: Colors.redAccent),
+                          child: Row(
+                            children: [
+                              Expanded(child: Text('Cancelar', style: TextStyle(
+                                  fontSize: 16, color: Colors.white)
+                                ,
+                                textAlign: TextAlign.center,
+                              ),
+
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      )
+
+                    ]
+
+                ),
+              ),
+            );
+          }
+      );
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////
+    CollectionReference negocio = FirebaseFirestore.instance.collection(
+        'negocios');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,20 +227,24 @@ class _registroNegocioState extends State<registroNegocio> {
 
         body: ListView(
             children: [
-              Container(
-                  padding: EdgeInsets.all(20.0),
-                  child: TextField(
-                    controller: foto,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                        fillColor: Colors.cyan[700],
-                        filled: true,
-                        icon: Icon(Icons.sentiment_satisfied_alt,size: 25,color: Colors.cyan[700]),
-                        hintText: "Digite el nombre de su Negocio",
-                        hintStyle: TextStyle(color: Colors.black38)
+              Padding(padding: EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    ElevatedButton(onPressed:(){
+
+                      opciones(context );
+
+                    }
+                        , child: Text('seleccione una imagen')
                     ),
-                  )
+                    SizedBox(height: 30,),
+                    imagen==null?Center() : Image.file(imagen!),
+                  ],
+
+                ),
+
               ),
+
               Container(
                   padding: EdgeInsets.all(20.0),
                   child: TextField(
@@ -210,7 +391,7 @@ class _registroNegocioState extends State<registroNegocio> {
 
 
                       onPressed: () async {
-                        if(foto.text.isEmpty || nombre.text.isEmpty || pagina.text.isEmpty || rut.text.isEmpty || direccion.text.isEmpty|| telefono.text.isEmpty|| password.text.isEmpty ||
+                        if( nombre.text.isEmpty || pagina.text.isEmpty || rut.text.isEmpty || direccion.text.isEmpty|| telefono.text.isEmpty|| password.text.isEmpty ||
                            correo.text.isEmpty || categoria.text.isEmpty || celular.text.isEmpty){
                           print("Campos Vacios");
                           Fluttertoast.showToast(msg: "Campos Vacios", toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM);
@@ -231,7 +412,8 @@ class _registroNegocioState extends State<registroNegocio> {
                               "id":rut.text,
                               "correo":correo.text,
                               "categoria":categoria.text,
-                              "celular":celular.text
+                              "celular":celular.text,
+                              "foto":aux2
 
 
 
@@ -263,7 +445,7 @@ class _registroNegocioState extends State<registroNegocio> {
 
                             QuerySnapshot inserto = await negocio.where(FieldPath.documentId, isEqualTo: rut.text).get();
 
-                            limpiar();
+                           // limpiar();
                             if(inserto.docs.length>0){
                               Fluttertoast.showToast(msg: "Se Registo el Negocio Exitosamente.", toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM);
                             }else{

@@ -38,9 +38,11 @@ dependencies:
   cloud_firestore:
   fluttertoast: ^8.0.8
   image_picker: ^0.8.4+4
-  firebase_storage: ^10.1.0
+
   firebase_messaging: ^11.2.3
   json_serializable: ^6.0.1
+  path: ^1.8.0
+  firebase_storage: ^10.2.4
 
 
 
