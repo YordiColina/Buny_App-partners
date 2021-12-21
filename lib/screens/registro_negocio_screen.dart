@@ -1,7 +1,3 @@
-
-
-
-
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,15 +10,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:buny_app/main.dart';
 import 'package:image_picker/image_picker.dart';
-class registro_negocio_screen extends StatefulWidget {
-  const registro_negocio_screen({Key? key}) : super(key: key);
+class RegistroNegocioScreen extends StatefulWidget {
+  const RegistroNegocioScreen({Key? key}) : super(key: key);
 
   @override
-  _registro_negocio_screenState createState() => _registro_negocio_screenState();
+  RegistroNegocioScreenState createState() => RegistroNegocioScreenState();
 }
 
-class _registro_negocio_screenState extends State<registro_negocio_screen> {
-
+class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
  var aux;
  var aux2;
     final categoria = TextEditingController();
@@ -74,6 +69,7 @@ class _registro_negocio_screenState extends State<registro_negocio_screen> {
 
       }
     });
+
   Navigator.of(context).pop();
 
     Future<String> uploadFile(File image) async{
@@ -85,38 +81,17 @@ class _registro_negocio_screenState extends State<registro_negocio_screen> {
       await storageReference.putFile(image);
       aux2=await storageReference.getDownloadURL();
       return await storageReference.getDownloadURL();
-
-
     }
-
 
     Future<void> saveImages(File? imagen, DocumentReference ref) async {
 
         String imageURL = await uploadFile(imagen!);
         ref.update({"images": FieldValue.arrayUnion([imageURL])});
-
-
     }
     await saveImages(imagen,bunyAppRef);
 
-
-
-
-
-
-
-
-
-
-
-
   }
-
-
-
 // Image Picker
-
-
     //////////////////////////////////////////////////////////////////
     opciones(contex) {
       showDialog(context: context,
@@ -408,12 +383,6 @@ class _registro_negocio_screenState extends State<registro_negocio_screen> {
                               "categoria":categoria.text,
                               "celular":celular.text,
                               "foto":aux2
-
-
-
-
-
-
                             });
 
 

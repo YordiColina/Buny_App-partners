@@ -16,9 +16,10 @@ class RegistroProductoScreen extends StatelessWidget {
   final precioController = TextEditingController();
 
   Future<void> registarProducto(context) async {
-    Producto newProducto = Producto(nombreController.text, descripController.text, fotoController.text, precioController.text);
+    Producto newProducto = Producto(id: DateTime.now().toString() , nombre: nombreController.text, descripcion : descripController.text, foto : fotoController.text, precio: precioController.text);
 
     var productoMap = {
+      'id': newProducto.id,
       'nombre': newProducto.nombre,
       'descripcion' : newProducto.descripcion,
       'precio' : newProducto.precio,

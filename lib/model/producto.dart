@@ -4,6 +4,12 @@ class Producto{
   final String descripcion;
   final String foto;
   final String precio;
+  final String id;
 
-  Producto(this.nombre, this.descripcion, this.precio, this.foto);
+  Producto({
+    required this.nombre,
+    required this.descripcion,
+    required this.precio,
+    required this.foto,
+    required this.id});
 }

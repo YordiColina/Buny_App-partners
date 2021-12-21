@@ -1,5 +1,4 @@
 import 'package:buny_app/screens/home_screen.dart';
-import 'package:buny_app/screens/perfil_screen.dart';
 import 'package:buny_app/screens/registro_negocio_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,107 +7,207 @@ import 'package:fluttertoast/fluttertoast.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  List pers = [];
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  var negocio =FirebaseFirestore.instance.collection('negocios');
+  var negocio = FirebaseFirestore.instance.collection('negocios');
 
   Future<void> loginIntoAccount(context) async {
-    if(emailController.text.isEmpty || passwordController.text.isEmpty){
-      Fluttertoast.showToast(msg: "Campos Vacios", toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM);
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      Fluttertoast.showToast(
+          msg: "Campos Vacios",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM);
       return;
     }
 
-    await FirebaseFirestore.instance.collection('negocios')
+    await FirebaseFirestore.instance
+        .collection('negocios')
         .where('correo', isEqualTo: emailController.text)
-        .where('contrasena', isEqualTo: passwordController.text).get().then((info){
-          print(info.toString());
-
-      if(info.docs.isEmpty || info == null){
-        Fluttertoast.showToast(msg: "Negocio no encontrado.", toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM);
-        Fluttertoast.showToast(msg: "Verifique la información ingresada.", toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM);
+        .where('contrasena', isEqualTo: passwordController.text)
+        .get()
+        .then((info) {
+      if (info.docs.isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Negocio no encontrado.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM);
+        Fluttertoast.showToast(
+            msg: "Verifique la información ingresada.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM);
       } else {
-        info.docs.forEach((element) {
+        for (var element in info.docs) {
           String id = element.get("id");
-          pers.add(info);
-          Navigator.of(context).push(MaterialPageRoute(builder: (_){
-            return HomeScreen(id);
-          },),);
-        });
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) {
+                return HomeScreen(id);
+              },
+            ),
+          );
+        }
       }
     });
   }
 
   @override
-
-  Widget build(BuildContext context,) {
+  Widget build(BuildContext context) {
+    MediaQueryData mediaQuery = MediaQuery.of(context);
+    double safeHeight = mediaQuery.size.height - mediaQuery.padding.top;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login"),
-      ),
       body: Column(
-
-        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
+          Stack(children: [
+            SizedBox(
+              height: safeHeight * 0.25,
+              width: mediaQuery.size.width,
+              child: Image.asset(
+                'lib/assets/images/night_sky.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              bottom: 10,
+              left: mediaQuery.size.width * 0.3,
+              child: ClipOval(
+                child: SizedBox(
+                  height: 150,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Image.asset(
+                      'lib/assets/images/Raster.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ]),
+          SizedBox(
+            height: safeHeight * 0.020,
+          ),
+          const Text(
+            'Iniciar sesión',
+            style: TextStyle(
+              fontSize: 35,
+            ),
+          ),
+          SizedBox(
+            height: safeHeight * 0.020,
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
             child: TextField(
               controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Correo"
+              decoration: const InputDecoration(
+                fillColor: Colors.white30,
+                filled: true,
+                hintText: 'Ingresa tu correo',
+                hintStyle: TextStyle(fontSize: 20),
+                prefixIcon: Icon(Icons.mail),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(20),
+          SizedBox(
+            height: safeHeight * 0.020,
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
             child: TextField(
-              keyboardType: TextInputType.text,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
               controller: passwordController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Contraseña"
+              decoration: const InputDecoration(
+                fillColor: Colors.white30,
+                filled: true,
+                hintText: 'Ingresa tu contraseña',
+                hintStyle: TextStyle(fontSize: 20),
+                prefixIcon: Icon(Icons.lock),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
               ),
             ),
+          ),
+          SizedBox(
+            height: safeHeight * 0.020,
           ),
           ElevatedButton(
               onPressed: () => loginIntoAccount(context),
-              child: const Text("Login")),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: Text(
+                  "Ingresar",
+                  style: TextStyle(fontSize: 18, color: Colors.white60),
+                ),
+              ),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      )))),
+          SizedBox(
+            height: safeHeight * 0.3,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                '¿Aún no tienes cuenta?',
+                style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 20
+                ),
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) {
+                          return const RegistroNegocioScreen();
+                        },
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Registrate",
+                    style: TextStyle(
+                        color: Colors.yellow,
+                        fontSize: 20
+                    ),
+                  )
+              ),
+            ],
+          ),
           TextButton(
-              onPressed: () async {
-
-
-
-                Navigator.of(context).push(MaterialPageRoute(builder: (_){
-
-                  return  registro_negocio_screen();
-                },),);
-              },
-              child: const Text("Registrar Negocio")),
-          TextButton(
-              onPressed:  ()  {
-
-
-                Navigator.of(context).push(MaterialPageRoute(builder: (_){
-                  return HomeScreen("001");
-
-                },),);
-              },
-              child: const Text("Ingresar como invitado"),
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all(Colors.green)
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) {
+                    return HomeScreen("001");
+                  },
+                ),
+              );
+            },
+            child: const Text(
+              "Ingresar como invitado",
+              style: TextStyle(
+                  fontSize: 20
+              ),
             ),
+            style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all(Colors.yellow)),
           ),
         ],
       ),
     );
   }
 }
-
-
-
