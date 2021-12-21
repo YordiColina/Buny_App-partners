@@ -12,16 +12,17 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 
 
-import 'main.dart';
+import 'package:buny_app/main.dart';
 import 'package:image_picker/image_picker.dart';
-class registroNegocio extends StatefulWidget {
-  const registroNegocio({Key? key}) : super(key: key);
+class registro_negocio_screen extends StatefulWidget {
+  const registro_negocio_screen({Key? key}) : super(key: key);
 
   @override
-  _registroNegocioState createState() => _registroNegocioState();
+  _registro_negocio_screenState createState() => _registro_negocio_screenState();
 }
 
-class _registroNegocioState extends State<registroNegocio> {
+class _registro_negocio_screenState extends State<registro_negocio_screen> {
+
  var aux;
  var aux2;
     final categoria = TextEditingController();
@@ -98,11 +99,6 @@ class _registroNegocioState extends State<registroNegocio> {
     }
     await saveImages(imagen,bunyAppRef);
 
-   /* var storage = FirebaseStorage.instance;
-    var storageRef = storage.ref();
-    aux =imagen!.path;
-    var spaceRef = await storageRef.child('$aux').getDownloadURL().toString() ;
-   aux2=spaceRef;*/
 
 
 
@@ -110,11 +106,10 @@ class _registroNegocioState extends State<registroNegocio> {
 
 
 
-//
 
 
-     //   var httpsReference = storage.refFromURL('https://firebasestorage.googleapis.com/v0/b/equipo1proyecto-98cd8.appspot.com/o/bunyApp%2Fdata%2Fuser%2F0%2Fcom.bunyProject.buny_app%2Fcache%2F$aux');
-    //aux2= storage.refFromURL('https://firebasestorage.googleapis.com/v0/b/equipo1proyecto-98cd8.appspot.com/o/bunyApp%2Fdata%2Fuser%2F0%2Fcom.bunyProject.buny_app%2Fcache%2F$aux');
+
+
   }
 
 
@@ -222,7 +217,6 @@ class _registroNegocioState extends State<registroNegocio> {
           centerTitle: true,
         ),
 
-        drawer: menu(),
 
 
         body: ListView(
@@ -569,4 +563,7 @@ class _registroNegocioState extends State<registroNegocio> {
     );
   }
 }
+
+
+
 
