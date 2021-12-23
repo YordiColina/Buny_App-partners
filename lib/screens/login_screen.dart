@@ -101,10 +101,13 @@ class LoginScreen extends StatelessWidget {
             child: TextField(
               controller: emailController,
               decoration: const InputDecoration(
-                fillColor: Colors.white30,
+                fillColor: Color(0xff696969),
                 filled: true,
                 hintText: 'Ingresa tu correo',
-                hintStyle: TextStyle(fontSize: 20),
+                hintStyle: TextStyle(
+                  fontSize: 20,
+                  color: Color(0xffe7e7e7),
+                ),
                 prefixIcon: Icon(Icons.mail),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(40.0)),
@@ -123,10 +126,13 @@ class LoginScreen extends StatelessWidget {
             child: TextField(
               controller: passwordController,
               decoration: const InputDecoration(
-                fillColor: Colors.white30,
+                fillColor: Color(0xff696969),
                 filled: true,
                 hintText: 'Ingresa tu contraseña',
-                hintStyle: TextStyle(fontSize: 20),
+                hintStyle: TextStyle(
+                  fontSize: 20,
+                  color: Color(0xffe7e7e7),
+                ),
                 prefixIcon: Icon(Icons.lock),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(40.0)),
@@ -146,14 +152,16 @@ class LoginScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: Text(
                   "Ingresar",
-                  style: TextStyle(fontSize: 18, color: Colors.white60),
+                  style: TextStyle(fontSize: 18, color: Color(0xffC5D2DC)),
                 ),
               ),
               style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(const Color(0xff2A74A5)),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                      )))),
+                    borderRadius: BorderRadius.circular(25.0),
+                  )))),
           SizedBox(
             height: safeHeight * 0.3,
           ),
@@ -162,10 +170,7 @@ class LoginScreen extends StatelessWidget {
             children: [
               const Text(
                 '¿Aún no tienes cuenta?',
-                style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 20
-                ),
+                style: TextStyle(color: Color(0xffE1E3E5), fontSize: 20),
               ),
               TextButton(
                   onPressed: () {
@@ -179,12 +184,8 @@ class LoginScreen extends StatelessWidget {
                   },
                   child: const Text(
                     "Registrate",
-                    style: TextStyle(
-                        color: Colors.yellow,
-                        fontSize: 20
-                    ),
-                  )
-              ),
+                    style: TextStyle(color: Color(0xffC4BB0A), fontSize: 20),
+                  )),
             ],
           ),
           TextButton(
@@ -199,12 +200,11 @@ class LoginScreen extends StatelessWidget {
             },
             child: const Text(
               "Ingresar como invitado",
-              style: TextStyle(
-                  fontSize: 20
-              ),
+              style: TextStyle(fontSize: 20),
             ),
             style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all(Colors.yellow)),
+                foregroundColor:
+                    MaterialStateProperty.all(const Color(0xffC4BB0A))),
           ),
         ],
       ),

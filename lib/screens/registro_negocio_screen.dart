@@ -71,7 +71,6 @@ class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
     });
 
   Navigator.of(context).pop();
-
     Future<String> uploadFile(File image) async{
 
       String fileName = image.path;
@@ -79,7 +78,7 @@ class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
           .ref()
           .child('bunyApp/$fileName');
       await storageReference.putFile(image);
-      aux2=await storageReference.getDownloadURL();
+      aux2 = await storageReference.getDownloadURL();
       return await storageReference.getDownloadURL();
     }
 
@@ -191,29 +190,21 @@ class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
           title: Text("Registrate"),
           centerTitle: true,
         ),
-
-
-
         body: ListView(
             children: [
               Padding(padding: EdgeInsets.all(20),
                 child: Column(
                   children: [
                     ElevatedButton(onPressed:(){
-
                       opciones(context );
-
                     }
                         , child: Text('seleccione una imagen')
                     ),
                     SizedBox(height: 30,),
                     imagen==null?Center() : Image.file(imagen!),
                   ],
-
                 ),
-
               ),
-
               Container(
                   padding: EdgeInsets.all(20.0),
                   child: TextField(
@@ -328,10 +319,10 @@ class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
                   )
               ),
               Container(
-                  padding: EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: TextField(
                     controller: correo,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                         fillColor: Colors.cyan[700],
                         filled: true,
@@ -352,13 +343,7 @@ class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
                         backgroundColor: MaterialStateProperty.all<Color>(Colors.cyan),
                         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical:10.0,horizontal: 10.0)),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-
-
                       ),
-
-
-
-
                       onPressed: () async {
                         if( nombre.text.isEmpty || pagina.text.isEmpty || rut.text.isEmpty || direccion.text.isEmpty|| telefono.text.isEmpty|| password.text.isEmpty ||
                            correo.text.isEmpty || categoria.text.isEmpty || celular.text.isEmpty){
@@ -384,10 +369,6 @@ class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
                               "celular":celular.text,
                               "foto":aux2
                             });
-
-
-
-
                             /* void getCriterio3() async {
                           String respuesta=" ";
                           CollectionReference datos3 = FirebaseFirestore.instance.collection(
@@ -532,7 +513,3 @@ class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
     );
   }
 }
-
-
-
-

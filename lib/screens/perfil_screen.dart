@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:buny_app/screens/google_maps_widget.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,12 +27,6 @@ class _perfil_screenState extends State<perfil_screen> {
   final rut=TextEditingController();
   final telefono=TextEditingController();
   final pagina=TextEditingController();
-
-
-
-
-
-
 
     var aux;
     var aux2;
@@ -73,8 +68,6 @@ class _perfil_screenState extends State<perfil_screen> {
         await storageReference.putFile(image);
         aux2=await storageReference.getDownloadURL();
         return await storageReference.getDownloadURL();
-
-
       }
 
 
@@ -318,8 +311,13 @@ class _perfil_screenState extends State<perfil_screen> {
                     decoration: InputDecoration(
                         fillColor: Colors.cyan[700],
                         filled: true,
-                        icon: Icon(
-                            Icons.drag_indicator, size: 25, color: Colors.cyan[700]),
+                        icon: InkWell(
+                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return const GoogleMapsWidget();
+      })),
+                          child: Icon(
+                              Icons.location_on, size: 25, color: Colors.cyan[700]),
+                        ),
                         hintText: "Direccion",
                         hintStyle: TextStyle(color: Colors.black12)
                     ),
@@ -380,11 +378,7 @@ class _perfil_screenState extends State<perfil_screen> {
                         backgroundColor: MaterialStateProperty.all<Color>(Colors.cyan),
                         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical:10.0,horizontal: 10.0)),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-
-
                       ),
-
-
                       onPressed: ()async {
                         QuerySnapshot existe2 = await users.where(FieldPath.documentId, isEqualTo: rut.text).get();
                         if(rut.text.isEmpty || nombre.text.isEmpty || categoria.text.isEmpty || correo.text.isEmpty || celular.text.isEmpty||
@@ -422,12 +416,8 @@ class _perfil_screenState extends State<perfil_screen> {
                           backgroundColor: MaterialStateProperty.all<Color>(Colors.cyan),
                           padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical:10.0,horizontal: 20.0)),
                           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-
-
                         ),
-
                         onPressed: ()  {
-
                           if(rut.text.isEmpty){
                             Fluttertoast.showToast(msg: "Campos Vacios.", fontSize: 20, backgroundColor: Colors.red, textColor: Colors.lightGreen,
                                 toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.CENTER);
@@ -438,21 +428,10 @@ class _perfil_screenState extends State<perfil_screen> {
                             Fluttertoast.showToast(msg: "Usuario Eliminado Exitosamente.", fontSize: 20, backgroundColor: Colors.red, textColor: Colors.lightGreen,
                                 toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.CENTER);
                           }
-
-
-
-
-
-
-
                         }, child: Text("Dar de baja usuario")),
                   )
-
-
                 ], ),
     ]),
-
     );
   }
-
 }
