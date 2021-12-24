@@ -1,12 +1,16 @@
 import 'dart:async';
 
+import 'package:buny_app/model/negocio.dart';
+import 'package:buny_app/screens/perfil_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart' as geo_code;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:geocoding/geocoding.dart' as geo_code;
 
 class GoogleMapsWidget extends StatefulWidget {
-  const GoogleMapsWidget({Key? key}) : super(key: key);
+  final Negocio negocio;
+  const GoogleMapsWidget(this.negocio, {Key? key}) : super(key: key);
 
   @override
   _GoogleMapsWidgetState createState() => _GoogleMapsWidgetState();
@@ -19,77 +23,86 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   CameraPosition? currentLocation; 
   LocationData? currentLocationData;
   final Map<String, Marker> _markers = {};
+  List<geo_code.Placemark>? placemarks;
 
   static const CameraPosition _bogota = CameraPosition(
     target: LatLng(4.651021, -74.087219),
     zoom: 12
   );
 
-  Future<CameraPosition> setLocation() async {
+
+  Future<void> setLocation() async {
     currentLocationData = await location.getLocation();
-    List<geo_code.Placemark> placemarks = await geo_code.placemarkFromCoordinates(currentLocationData!.latitude!, currentLocationData!.longitude!);
     Marker marker = Marker(
-        markerId: const MarkerId('Current_Address'),
-        position: LatLng(currentLocationData!.latitude!, currentLocationData!.longitude!),
-        infoWindow: InfoWindow(
-            title: 'Nombre del negocio',
-            snippet: placemarks[0].street,
-        ),
+      markerId: const MarkerId('Current_Address'),
+      position: LatLng(currentLocationData!.latitude!, currentLocationData!.longitude!),
     );
     _markers['Current_Address'] = marker;
 
-    return CameraPosition(
+    currentLocation = CameraPosition(
         zoom: 18,
         target: LatLng(
             currentLocationData!.latitude!,
             currentLocationData!.longitude!)
     );
-    /**final GoogleMapController controller = await _controller.future;
-    setState(() {
 
-      controller.animateCamera(
-          CameraUpdate.newCameraPosition(
-              CameraPosition(
-                zoom: 18,
-                  target: LatLng(
-                      currentLocationData!.latitude!,
-                      currentLocationData!.longitude!)
-              )
-          )
-      );
-    });*/
+  }
 
+  agregarDireccion() async {
+    LatLng coordinates = _markers['Current_Address']!.position;
+    placemarks = await geo_code.placemarkFromCoordinates(
+        coordinates.latitude, coordinates.longitude);
+    widget.negocio.direccion = placemarks![0].street!;
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return perfil_screen(negocio: widget.negocio);
+    }));
+  }
+
+  CameraPosition mainLocation(){
+    Future.delayed(const Duration(milliseconds: 500), (){
+      setState(() {
+        if(currentLocationData ==null){
+          setLocation();
+        } else {
+          currentLocationData = currentLocationData;
+        }
+      });
+    });
+    return _bogota;
+  }
+
+  @override
+  void initState() {
+    setLocation();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: FutureBuilder(
-        future: setLocation(),
-          builder: (ctx, AsyncSnapshot<CameraPosition> snapshot){
-        if(snapshot.connectionState == ConnectionState.done){
-          if(snapshot.hasError){
-            return Center(
-              child: Text(
-                '${snapshot.error} occured',
-                style: const TextStyle(fontSize: 18),
-              ),
-            );
-          }else if(snapshot.hasData){
-            return GoogleMap(
+      body: GoogleMap(
               mapType: MapType.normal,
-              initialCameraPosition: snapshot.data!,
+              initialCameraPosition: currentLocation==null ? mainLocation()
+              : currentLocation!,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
+                if(currentLocation!=null){
+                  controller.moveCamera(CameraUpdate.newCameraPosition(currentLocation!)
+                  );
+                }
               },
               markers: _markers.values.toSet(),
-            );
-        }
-        } return const CircularProgressIndicator();
-      }),
+              onCameraMove:(position) {
+                setState(() {
+                  _markers['Current_Address'] = _markers['Current_Address']!.copyWith(
+                      positionParam: position.target,
+                  );
+                });
+              },
+            ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){},
+        onPressed: agregarDireccion,
         label: const Text('Agregar dirección'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

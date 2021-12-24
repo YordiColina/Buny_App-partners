@@ -1,16 +1,20 @@
 import 'dart:io';
+
+import 'package:buny_app/model/negocio.dart';
 import 'package:buny_app/screens/google_maps_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'menu_widget.dart';
 
 
 class perfil_screen extends StatefulWidget {
-final datosUsuario usuario;
-  const perfil_screen({required this.usuario});
+final Negocio negocio;
+  const perfil_screen({required this.negocio});
 
   @override
   _perfil_screenState createState() => _perfil_screenState();
@@ -172,15 +176,15 @@ class _perfil_screenState extends State<perfil_screen> {
     @override
 
     Widget build(BuildContext context) {
-      nombre.text = widget.usuario.nombre;
-      correo.text = widget.usuario.correo;
-      contrasena.text = widget.usuario.contrasena;
-      categoria.text = widget.usuario.categoria;
-      celular.text = widget.usuario.celular;
-      direccion.text = widget.usuario.direccion;
-      rut.text = widget.usuario.rut;
-      telefono.text = widget.usuario.telefono;
-      pagina.text = widget.usuario.pagina;
+      nombre.text = widget.negocio.nombre;
+      correo.text = widget.negocio.correo;
+      contrasena.text = widget.negocio.contrasena;
+      categoria.text = widget.negocio.categoria;
+      celular.text = widget.negocio.celular;
+      direccion.text = widget.negocio.direccion;
+      rut.text = widget.negocio.rut;
+      telefono.text = widget.negocio.telefono;
+      pagina.text = widget.negocio.pagina;
       void limpiar(){
         categoria.text=""; nombre.text=""; rut.text=""; correo.text=""; celular.text=""; contrasena.text=""; telefono.text="";
         pagina.text=""; direccion.text="";
@@ -191,10 +195,10 @@ class _perfil_screenState extends State<perfil_screen> {
         backgroundColor: Colors.amber[50],
         appBar: AppBar(
           backgroundColor: Colors.cyan[700],
-          title: Text( widget.usuario.nombre),
+          title: Text( widget.negocio.nombre),
         ),
 
-      drawer: MenuWidget(widget.usuario.id),
+      drawer: MenuWidget(widget.negocio.id),
 
         body: ListView(
             children: [
@@ -204,7 +208,7 @@ class _perfil_screenState extends State<perfil_screen> {
                   Padding(
                     padding: EdgeInsets.only(left: 137.0, right: 15.0, bottom: 10.0,top:10.0),
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(widget.usuario.foto_perfil),
+                      backgroundImage: NetworkImage(widget.negocio.foto_perfil),
                       radius: 70,
                     ),
                   )
@@ -304,41 +308,38 @@ class _perfil_screenState extends State<perfil_screen> {
                   )
               ),
               Container(
-                  padding: EdgeInsets.all(20.0),
-                  child: TextField(
-                    controller: direccion,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                        fillColor: Colors.cyan[700],
-                        filled: true,
-                        icon: InkWell(
-                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return const GoogleMapsWidget();
-      })),
-                          child: Icon(
-                              Icons.location_on, size: 25, color: Colors.cyan[700]),
-                        ),
-                        hintText: "Direccion",
-                        hintStyle: TextStyle(color: Colors.black12)
-                    ),
-                  )
-              ),
-              Container(
-                  padding: EdgeInsets.all(20.0),
-                  child: TextField(
-                    controller: rut,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                        fillColor: Colors.cyan[700],
-                        filled: true,
-                        icon: Icon(
-                            Icons.drag_indicator, size: 25, color: Colors.cyan[700]),
-                        hintText: "Rut",
-                        hintStyle: TextStyle(color: Colors.black12)
-                    ),
-                  )
-              ),
-              Container(
+            padding: EdgeInsets.all(20.0),
+            child: TextField(
+              controller: direccion,
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                  fillColor: Colors.cyan[700],
+                  filled: true,
+                  icon: InkWell(
+                    onTap: () => Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_) {
+                      return GoogleMapsWidget(widget.negocio);
+                    })),
+                    child: Icon(Icons.location_on,
+                        size: 25, color: Colors.cyan[700]),
+                  ),
+                  hintText: "Direccion",
+                  hintStyle: TextStyle(color: Colors.black12)),
+            )),
+        Container(
+            padding: EdgeInsets.all(20.0),
+            child: TextField(
+              controller: rut,
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                  fillColor: Colors.cyan[700],
+                  filled: true,
+                  icon: Icon(Icons.drag_indicator,
+                      size: 25, color: Colors.cyan[700]),
+                  hintText: "Rut",
+                  hintStyle: TextStyle(color: Colors.black12)),
+            )),
+        Container(
                   padding: EdgeInsets.all(20.0),
                   child: TextField(
                     controller: telefono,
@@ -386,6 +387,8 @@ class _perfil_screenState extends State<perfil_screen> {
                           Fluttertoast.showToast(msg: "Campos Vacios.", fontSize: 20, backgroundColor: Colors.red, textColor: Colors.lightGreen,
                               toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.CENTER);
                         }else{
+                          List<Location> locations = await locationFromAddress(direccion.text);
+                          var location = locations[0];
                           users.doc(rut.text).update({
                             "nombre": nombre.text,
                             "categoria": categoria.text,
@@ -396,7 +399,11 @@ class _perfil_screenState extends State<perfil_screen> {
                             "rut": rut.text,
                             "direccion":direccion.text,
                             "telefono":telefono.text,
-                            "foto_perfil":aux2.toString()
+                            "foto_perfil":aux2.toString(),
+                            "geolocalizacion": GeoPoint(
+                                  location.latitude,
+                                  location.longitude
+                            ),
                           });
 
                           Fluttertoast.showToast(msg: "Datos Actualizados Correctamente.", fontSize: 20, backgroundColor: Colors.red, textColor: Colors.lightGreen,

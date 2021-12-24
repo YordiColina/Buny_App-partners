@@ -1,3 +1,4 @@
+import 'package:buny_app/model/negocio.dart';
 import 'package:buny_app/screens/home_screen.dart';
 import 'package:buny_app/screens/perfil_screen.dart';
 import 'package:buny_app/screens/registro_producto_screen.dart';
@@ -52,14 +53,14 @@ class MenuWidget extends StatelessWidget {
                           usuarios.add(per);
                         }
                       }
-                     datosUsuario Url = datosUsuario(usuarios[0]['nombre'],usuarios[0]['correo'], usuarios[0]['contrasena'], usuarios[0]['foto_perfil'],
+                     Negocio Url = Negocio(usuarios[0]['nombre'],usuarios[0]['correo'], usuarios[0]['contrasena'], usuarios[0]['foto_perfil'],
                        usuarios[0]['categoria'],usuarios[0]['celular'], usuarios[0]['direccion'], usuarios[0]['rut'],usuarios[0]['telefono'],usuarios[0]['pagina'],usuarios[0]['id']);
 
 
 
                       Navigator.push(context, MaterialPageRoute(
                           builder: (context) =>
-                              perfil_screen(usuario: Url)));
+                              perfil_screen(negocio: Url)));
                     },
 
                      ),
@@ -85,30 +86,4 @@ class MenuWidget extends StatelessWidget {
     );
   }
 }
-class datosUsuario {
-  String nombre = "";
-  String correo = "";
-  String foto_perfil = "";
-  String contrasena = "";
-  String categoria = "";
-  String celular = "";
-  String direccion = "";
-  String rut = "";
-  String telefono = "";
-  String pagina = "";
-  String id = "";
 
-  datosUsuario(nombre, correo, contrasena, foto_perfil,categoria,celular,direccion,rut,telefono,pagina, id) {
-    this.nombre = nombre;
-    this.correo = correo;
-    this.foto_perfil = foto_perfil;
-    this.contrasena = contrasena;
-    this.categoria=categoria;
-    this.celular=celular;
-    this.direccion=direccion;
-    this.rut=rut;
-    this.telefono=telefono;
-    this.pagina=pagina;
-    this.id=id;
-  }
-}
