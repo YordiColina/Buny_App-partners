@@ -55,159 +55,161 @@ class LoginScreen extends StatelessWidget {
     MediaQueryData mediaQuery = MediaQuery.of(context);
     double safeHeight = mediaQuery.size.height - mediaQuery.padding.top;
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Stack(children: [
+      body: ListView(
+        children:[ Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Stack(children: [
+              SizedBox(
+                height: safeHeight * 0.25,
+                width: mediaQuery.size.width,
+                child: Image.asset(
+                  'lib/assets/images/night_sky.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                bottom: 10,
+                left: mediaQuery.size.width * 0.3,
+                child: ClipOval(
+                  child: SizedBox(
+                    height: 150,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Image.asset(
+                        'lib/assets/images/Raster.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ]),
             SizedBox(
-              height: safeHeight * 0.25,
-              width: mediaQuery.size.width,
-              child: Image.asset(
-                'lib/assets/images/night_sky.jpg',
-                fit: BoxFit.cover,
+              height: safeHeight * 0.020,
+            ),
+            const Text(
+              'Iniciar sesión',
+              style: TextStyle(
+                fontSize: 35,
               ),
             ),
-            Positioned(
-              bottom: 10,
-              left: mediaQuery.size.width * 0.3,
-              child: ClipOval(
-                child: SizedBox(
-                  height: 150,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Image.asset(
-                      'lib/assets/images/Raster.png',
-                      fit: BoxFit.cover,
+            SizedBox(
+              height: safeHeight * 0.020,
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+              child: TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                  fillColor: Color(0xff696969),
+                  filled: true,
+                  hintText: 'Ingresa tu correo',
+                  hintStyle: TextStyle(
+                    fontSize: 20,
+                    color: Color(0xffe7e7e7),
+                  ),
+                  prefixIcon: Icon(Icons.mail),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
                     ),
                   ),
                 ),
               ),
-            )
-          ]),
-          SizedBox(
-            height: safeHeight * 0.020,
-          ),
-          const Text(
-            'Iniciar sesión',
-            style: TextStyle(
-              fontSize: 35,
             ),
-          ),
-          SizedBox(
-            height: safeHeight * 0.020,
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-            child: TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                fillColor: Color(0xff696969),
-                filled: true,
-                hintText: 'Ingresa tu correo',
-                hintStyle: TextStyle(
-                  fontSize: 20,
-                  color: Color(0xffe7e7e7),
-                ),
-                prefixIcon: Icon(Icons.mail),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                  borderSide: BorderSide(
-                    color: Colors.grey,
+            SizedBox(
+              height: safeHeight * 0.020,
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+              child: TextField(
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  fillColor: Color(0xff696969),
+                  filled: true,
+                  hintText: 'Ingresa tu contraseña',
+                  hintStyle: TextStyle(
+                    fontSize: 20,
+                    color: Color(0xffe7e7e7),
+                  ),
+                  prefixIcon: Icon(Icons.lock),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: safeHeight * 0.020,
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-            child: TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(
-                fillColor: Color(0xff696969),
-                filled: true,
-                hintText: 'Ingresa tu contraseña',
-                hintStyle: TextStyle(
-                  fontSize: 20,
-                  color: Color(0xffe7e7e7),
-                ),
-                prefixIcon: Icon(Icons.lock),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                  borderSide: BorderSide(
-                    color: Colors.grey,
+            SizedBox(
+              height: safeHeight * 0.020,
+            ),
+            ElevatedButton(
+                onPressed: () => loginIntoAccount(context),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: Text(
+                    "Ingresar",
+                    style: TextStyle(fontSize: 18, color: Color(0xffC5D2DC)),
                   ),
                 ),
-              ),
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(const Color(0xff2A74A5)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    )))),
+            SizedBox(
+              height: safeHeight * 0.3,
             ),
-          ),
-          SizedBox(
-            height: safeHeight * 0.020,
-          ),
-          ElevatedButton(
-              onPressed: () => loginIntoAccount(context),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: Text(
-                  "Ingresar",
-                  style: TextStyle(fontSize: 18, color: Color(0xffC5D2DC)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '¿Aún no tienes cuenta?',
+                  style: TextStyle(color: Color(0xffE1E3E5), fontSize: 20),
                 ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) {
+                            return const RegistroNegocioScreen();
+                          },
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Registrate",
+                      style: TextStyle(color: Color(0xffC4BB0A), fontSize: 20),
+                    )),
+              ],
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) {
+                      return HomeScreen("001");
+                    },
+                  ),
+                );
+              },
+              child: const Text(
+                "Ingresar como invitado",
+                style: TextStyle(fontSize: 20),
               ),
               style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(const Color(0xff2A74A5)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                  )))),
-          SizedBox(
-            height: safeHeight * 0.3,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                '¿Aún no tienes cuenta?',
-                style: TextStyle(color: Color(0xffE1E3E5), fontSize: 20),
-              ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) {
-                          return const RegistroNegocioScreen();
-                        },
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "Registrate",
-                    style: TextStyle(color: Color(0xffC4BB0A), fontSize: 20),
-                  )),
-            ],
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) {
-                    return HomeScreen("001");
-                  },
-                ),
-              );
-            },
-            child: const Text(
-              "Ingresar como invitado",
-              style: TextStyle(fontSize: 20),
+                  foregroundColor:
+                      MaterialStateProperty.all(const Color(0xffC4BB0A))),
             ),
-            style: ButtonStyle(
-                foregroundColor:
-                    MaterialStateProperty.all(const Color(0xffC4BB0A))),
-          ),
-        ],
-      ),
+          ],
+        ),
+     ] ),
     );
   }
 }
