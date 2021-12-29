@@ -1,6 +1,7 @@
 import 'package:buny_app/model/negocio.dart';
 import 'package:buny_app/screens/home_screen.dart';
 import 'package:buny_app/screens/perfil_screen.dart';
+import 'package:buny_app/screens/recibiendo_mensaje.dart';
 import 'package:buny_app/screens/registro_producto_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,13 @@ class MenuWidget extends StatelessWidget {
                     title: const Text("Mostrar productos"),
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context)=>ListaProductosScreen(id)));
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.drafts,size: 30, color: Colors.cyan[700]),
+                    title: const Text("Notificaciones"),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>recibiendo_mensaje()));
                     },
                   ),
                 ]
