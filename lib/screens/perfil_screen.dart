@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:buny_app/model/negocio.dart';
 import 'package:buny_app/screens/google_maps_widget.dart';
+import 'package:buny_app/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -408,6 +409,10 @@ class _perfil_screenState extends State<perfil_screen> {
 
                           Fluttertoast.showToast(msg: "Datos Actualizados Correctamente.", fontSize: 20, backgroundColor: Colors.red, textColor: Colors.lightGreen,
                               toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.CENTER);
+
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) =>
+                              HomeScreen(widget.negocio.id)));
                         }
                       },
                       child: Text("Actualizar datos")),
@@ -415,7 +420,7 @@ class _perfil_screenState extends State<perfil_screen> {
 
 
                   Container(
-                    padding: EdgeInsets.only(left: 50.0, right: 0.0, bottom: 20.0),
+                    padding: const EdgeInsets.only(left: 50.0, right: 0.0, bottom: 20.0),
                     alignment: Alignment.center,
                     child: ElevatedButton(
 
@@ -435,7 +440,7 @@ class _perfil_screenState extends State<perfil_screen> {
                             Fluttertoast.showToast(msg: "Usuario Eliminado Exitosamente.", fontSize: 20, backgroundColor: Colors.red, textColor: Colors.lightGreen,
                                 toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.CENTER);
                           }
-                        }, child: Text("Dar de baja usuario")),
+                        }, child: const Text("Dar de baja usuario")),
                   )
                 ], ),
     ]),

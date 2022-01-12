@@ -59,6 +59,7 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
     for (int i = 0; i < listaJson.length; i++) {
       if (listaJson[i]['id'] == widget.id) {
         listaJson[i] = {
+          'id':widget.id,
           'nombre': nombreController.text,
           'descripcion': descripController.text,
           'precio': precioController.text,
@@ -221,6 +222,9 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
             Container(
               padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
               child: TextField(
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
                 controller: nombreController,
                 decoration: const InputDecoration(
                   fillColor: Colors.white,
@@ -239,6 +243,9 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
                 controller: precioController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
@@ -258,6 +265,9 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
                 controller: descripController,
                 decoration: const InputDecoration(
                   fillColor: Colors.white,

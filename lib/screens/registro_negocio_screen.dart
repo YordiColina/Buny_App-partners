@@ -49,7 +49,7 @@ class RegistroNegocioScreenState extends State<RegistroNegocioScreen> {
   String camara="";
   String almacen="";
   File? imagen ;
-  final picker=ImagePicker();
+  final picker= ImagePicker();
   Future selimagen(op)async {
     var pickedFile;
     if (op == 1) {

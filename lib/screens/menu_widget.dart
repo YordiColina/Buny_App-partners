@@ -10,9 +10,9 @@ import 'lista_productos_screen.dart';
 
 class MenuWidget extends StatelessWidget {
   String id;
-
   CollectionReference users =FirebaseFirestore.instance.collection('negocios');
   List usuarios = [];
+
   MenuWidget(this.id, {Key? key}) : super(key: key);
 
 
@@ -43,19 +43,20 @@ class MenuWidget extends StatelessWidget {
                     title: const Text("Perfil"),
                     onTap: () async {
                       QuerySnapshot existe = await users.where(
-                          FieldPath.documentId, isEqualTo: id).get();
+                           FieldPath.documentId, isEqualTo: id).get();
 
 
-                      if (existe.docs.length !=
-                          0) { // lo recorremos y guardamos en un arreglo
+                      if (existe.docs.isNotEmpty) { // lo recorremos y guardamos en un arreglo
                         for (var per in existe.docs) {
                            print(per.data());
-
                           usuarios.add(per);
                         }
                       }
-                     Negocio Url = Negocio(usuarios[0]['nombre'],usuarios[0]['correo'], usuarios[0]['contrasena'], usuarios[0]['foto_perfil'],
-                       usuarios[0]['categoria'],usuarios[0]['celular'], usuarios[0]['direccion'], usuarios[0]['rut'],usuarios[0]['telefono'],usuarios[0]['pagina'],usuarios[0]['id']);
+                     Negocio Url = Negocio(usuarios[0]['nombre'],
+                         usuarios[0]['correo'], usuarios[0]['contrasena'], usuarios[0]['foto'],
+                       usuarios[0]['categoria'],usuarios[0]['celular'], usuarios[0]['direccion'],
+                         usuarios[0]['rut'],usuarios[0]['telefono'],usuarios[0]['pagina'],
+                         usuarios[0]['id']);
 
 
 

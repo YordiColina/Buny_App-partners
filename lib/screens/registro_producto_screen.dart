@@ -79,8 +79,7 @@ class _RegistroProductoScreenState extends State<RegistroProductoScreen> {
                         child: Row(
                           children: const [
                             Expanded(child: Text(
-                              'Tomar una Foto', style: TextStyle(fontSize: 16)
-                              ,
+                              'Tomar una Foto', style: TextStyle(fontSize: 16),
                             ),
                             ),
                             Icon(Icons.camera_alt, color: Colors.blue)
@@ -171,7 +170,6 @@ class _RegistroProductoScreenState extends State<RegistroProductoScreen> {
       //String imageURL = await uploadFile(imagen!);
         //ref.update({"images": FieldValue.arrayUnion([imageURL])});
         }
-
         await saveImages(imagen, bunyAppRef);
   }
 
@@ -189,6 +187,9 @@ class _RegistroProductoScreenState extends State<RegistroProductoScreen> {
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
                 child: TextField(
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
                   controller: nombreController,
                   decoration: const InputDecoration(
                     fillColor: Colors.white,
@@ -207,6 +208,9 @@ class _RegistroProductoScreenState extends State<RegistroProductoScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 child: TextField(
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
                   controller: precioController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
@@ -226,6 +230,9 @@ class _RegistroProductoScreenState extends State<RegistroProductoScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 child: TextField(
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
                   controller: descripController,
                   decoration: const InputDecoration(
                     fillColor: Colors.white,

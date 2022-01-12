@@ -2,23 +2,30 @@ import 'package:buny_app/model/producto.dart';
 import 'package:buny_app/product_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ListaProductosScreen extends StatefulWidget {
   final String id;
   const ListaProductosScreen(this.id,{Key? key}) : super(key: key);
 
   @override
-  _ListaProductosScreenState createState() => _ListaProductosScreenState(id);
+  _ListaProductosScreenState createState() => _ListaProductosScreenState();
 }
 
 class _ListaProductosScreenState extends State<ListaProductosScreen> {
-  _ListaProductosScreenState(this.id);
 
-  String id;
+  DocumentSnapshot<Map<String, dynamic>>? value;
   Future<List<Producto>> getListaProductos() async {
     var listaJson = [];
-    final value = await FirebaseFirestore.instance.collection("negocios").doc(id).get();
-    listaJson = value.data()!["productos"];
+     await FirebaseFirestore.instance.collection("negocios").doc(widget.id).get()
+        .then((value){
+          if(value.data() == null){
+
+          }
+      listaJson = value.data()!["productos"];
+    }).onError((error, stackTrace){
+      Fluttertoast.showToast(msg: error.toString(), toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM);
+    });
 
     List<Producto> listaProductos = [];
     for(var item in listaJson){
@@ -33,7 +40,6 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
       );
     }
     return listaProductos;
-
   }
 
   @override
@@ -55,7 +61,7 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
               } else if (snapshot.hasData){
                 var list = (snapshot.data!)
                     .map((productInfo){
-                  return ProductItem(id, productInfo.id, productInfo.nombre, productInfo.descripcion, productInfo.precio, productInfo.foto);
+                  return ProductItem(widget.id, productInfo.id, productInfo.nombre, productInfo.descripcion, productInfo.precio, productInfo.foto);
                 }).toList();
                 return ListView.builder(
                   itemCount: list.length,
