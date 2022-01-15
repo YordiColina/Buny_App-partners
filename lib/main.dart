@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: darkTheme(context),
-      home: LoginScreen(),
+      home: MyHomePage(),
       routes:{
         "enviar": (_)=> recibiendo_mensaje(),
       }
