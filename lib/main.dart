@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: darkTheme(context),
-      home: MyHomePage(),
+      home: LoginScreen(),
       routes:{
         "enviar": (_)=> recibiendo_mensaje(),
       }
@@ -50,34 +50,12 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
 
-    // onMessage es para cuando la app este en primer plano
-    FirebaseMessaging.instance.getInitialMessage();
-    FirebaseMessaging.onMessage.listen(( message) {
-      if(message.notification != null){
-        print(message.notification!.body);
-        print(message.notification!.title);
-      }
-    });
-
-    // cuando la app este abierta pero en segundo plano y permite modificar el ontap de la notificacion
-    FirebaseMessaging.onMessageOpenedApp.listen(( message) {
-      if(message.notification != null) {
-        contenido = message.notification!.body!;
-
-        titulo = message.notification!.title!;
-
-        final routeFromMessage = message.data["route"];
-        Navigator.of(context).pushNamed(routeFromMessage);
-        print(routeFromMessage);
-
-      }
-    });
-
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
   }
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+
+
+    );
   }
 }

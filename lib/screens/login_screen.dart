@@ -1,14 +1,76 @@
 import 'package:buny_app/screens/home_screen.dart';
+import 'package:buny_app/screens/recibiendo_mensaje.dart';
 import 'package:buny_app/screens/registro_negocio_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+FirebaseMessaging mensaje=FirebaseMessaging.instance;
+// handler para manejar notificaciones en segundo plano y con la app cerrada
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("Handling a background message");
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // onMessage es para cuando la app este en primer plano
+
+    FirebaseMessaging.onMessage.listen(( message) {
+      if(message.notification != null){
+        print(message.notification!.body);
+        print(message.notification!.title);
+      }
+    });
+
+    // cuando la app este abierta pero en segundo plano y permite modificar el ontap de la notificacion
+    FirebaseMessaging.onMessageOpenedApp.listen(( message) {
+      if(message.notification != null) {
+        contenido = message.notification!.body!;
+
+        titulo = message.notification!.title!;
+
+        final routeFromMessage = message.data["route"];
+        Navigator.of(context).pushNamed(routeFromMessage);
+        print(routeFromMessage);
+
+      }
+    });
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message!=null) {
+        contenido = message.notification!.body!;
+
+        titulo = message.notification!.title!;
+
+        final routeFromMessage = message.data["route"];
+        Navigator.of(context).pushNamed(routeFromMessage);
+        print(routeFromMessage);
+      }
+    }); // cuando la app esta cerrada , recibe el mensaje
+    //o la info de la notificacion tocada por el usuario
+
+
+    //funcion  que maneja los mensajes cuando la app esta en estado terminada(cerrada)
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+
+  }
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
   var negocio = FirebaseFirestore.instance.collection('negocios');
 
   Future<void> loginIntoAccount(context) async {
@@ -213,3 +275,5 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
+
