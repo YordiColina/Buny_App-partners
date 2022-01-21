@@ -1,6 +1,7 @@
 import 'package:buny_app/screens/home_screen.dart';
 import 'package:buny_app/screens/recibiendo_mensaje.dart';
 import 'package:buny_app/screens/registro_negocio_screen.dart';
+import 'package:buny_app/services/local_notification_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,6 +25,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
+    LocalNotificationService.initialize(context);
     // TODO: implement initState
     super.initState();
     // onMessage es para cuando la app este en primer plano
@@ -32,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if(message.notification != null){
         print(message.notification!.body);
         print(message.notification!.title);
+        LocalNotificationService.Display(message);
       }
     });
 
