@@ -33,7 +33,6 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
 
   final nombreController = TextEditingController();
   final descripController = TextEditingController();
-  final fotoController = TextEditingController();
   final precioController = TextEditingController();
 
   Future<void> setearInfoProducto(context) async {
@@ -41,7 +40,6 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
       setState(() {
         nombreController.text = widget.nombre;
         descripController.text = widget.descripcion;
-        fotoController.text = widget.foto;
         precioController.text = widget.precio;
       });
     }
@@ -63,7 +61,7 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
           'nombre': nombreController.text,
           'descripcion': descripController.text,
           'precio': precioController.text,
-          'foto': fotoController.text
+          'foto': imgUrl,
         };
       }
     }
@@ -74,9 +72,7 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
       'productos': listaJson
     });
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return HomeScreen(widget.id);
-    }));
+    Navigator.of(context).pop();
   }
 
   opciones(context) {
@@ -161,10 +157,8 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
     XFile? pickedFile;
     if (op == 1) {
       pickedFile = await picker.pickImage(source: ImageSource.camera);
-      camara = pickedFile.toString();
     } else {
       pickedFile = await picker.pickImage(source: ImageSource.gallery);
-      almacen = pickedFile.toString();
     }
     setState(() {
       if (pickedFile != null) {
@@ -174,7 +168,7 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
       }
     });
 
-    Navigator.of(context).pop();
+
     Future<String> uploadFile(File image) async {
       String fileName = image.path;
       Reference storageReference = FirebaseStorage.instance
@@ -185,15 +179,13 @@ class _EditarProductoScreenState extends State<EditarProductoScreen> {
       return await storageReference.getDownloadURL();
     }
 
-
-
     Future<void> saveImages(File? imagen, DocumentReference ref) async {
         imgUrl = await uploadFile(imagen!);
       //String imageURL = await uploadFile(imagen!);
       //ref.update({"images": FieldValue.arrayUnion([imageURL])});
     }
 
-    await saveImages(imagen, bunyAppRef);
+    await saveImages(imagen, bunyAppRef).then((value) => Navigator.of(context).pop());
   }
 
   @override

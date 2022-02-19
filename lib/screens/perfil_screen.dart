@@ -34,24 +34,19 @@ class _perfil_screenState extends State<perfil_screen> {
   final pagina=TextEditingController();
 
     var aux;
-    var aux2;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
     DocumentReference bunyAppRef = FirebaseFirestore.instance.collection('bunnyApp').doc();
-
-    String camara="";
-    String almacen="";
     File? imagen ;
     final picker=ImagePicker();
+
     Future selimagen(op)async {
-      var pickedFile;
+      XFile? pickedFile;
       if (op == 1) {
         pickedFile= await picker.pickImage(source: ImageSource.camera);
-        camara=pickedFile.toString() ;
 
       } else {
         pickedFile= await picker.pickImage(source: ImageSource.gallery);
-        almacen=pickedFile.toString();
       }
       setState(() {
         if(pickedFile!=null){
@@ -62,7 +57,6 @@ class _perfil_screenState extends State<perfil_screen> {
 
         }
       });
-      Navigator.of(context).pop();
 
       Future<String> uploadFile(File image) async{
 
@@ -71,29 +65,25 @@ class _perfil_screenState extends State<perfil_screen> {
             .ref()
             .child('bunyApp/$fileName');
         await storageReference.putFile(image);
-        aux2=await storageReference.getDownloadURL();
         return await storageReference.getDownloadURL();
       }
 
 
       Future<void> saveImages(File? imagen, DocumentReference ref) async {
-
-        String imageURL = await uploadFile(imagen!);
-        ref.update({"images": FieldValue.arrayUnion([imageURL])});
-
-
+        aux = await uploadFile(imagen!);
+        //ref.update({"images": FieldValue.arrayUnion([imageURL])});
       }
       await saveImages(imagen,bunyAppRef);
-
+      Navigator.of(context).pop();
     }
   ////////////////////////////////////////////////////////////////////////////////
 
 
   opciones(contex) {
     showDialog(context: context,
-        builder: (BuildContext contex) {
+        builder: (BuildContext context) {
           return AlertDialog(
-            contentPadding: EdgeInsets.all(0),
+            contentPadding: EdgeInsets.all(10),
             content: SingleChildScrollView(
               child: Column(
                   children: [
@@ -375,7 +365,6 @@ class _perfil_screenState extends State<perfil_screen> {
                   padding: EdgeInsets.only(left: 55.0, right: 0.0, bottom: 20.0),
                   alignment: Alignment.center,
                   child: ElevatedButton(
-
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Colors.cyan),
                         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical:10.0,horizontal: 10.0)),
@@ -400,7 +389,7 @@ class _perfil_screenState extends State<perfil_screen> {
                             "rut": rut.text,
                             "direccion":direccion.text,
                             "telefono":telefono.text,
-                            "foto_perfil":aux2.toString(),
+                            "foto":aux.toString(),
                             "geolocalizacion": GeoPoint(
                                   location.latitude,
                                   location.longitude
@@ -410,9 +399,7 @@ class _perfil_screenState extends State<perfil_screen> {
                           Fluttertoast.showToast(msg: "Datos Actualizados Correctamente.", fontSize: 20, backgroundColor: Colors.red, textColor: Colors.lightGreen,
                               toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.CENTER);
 
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) =>
-                              HomeScreen(widget.negocio.id)));
+                          Navigator.pop(context);
                         }
                       },
                       child: Text("Actualizar datos")),
